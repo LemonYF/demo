@@ -22,6 +22,10 @@
         </li>
       </ul>
     </div>
+
+    <!-- <div>
+      <p @click='createAd'>生成广告</p>
+    </div> -->
     <!--<div class="userinfo">-->
       <!--<img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />-->
       <!--<img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />-->
@@ -95,12 +99,57 @@ export default {
       }
     },
     clickHandle (ev) {
-      console.log('clickHandle:', ev)
+      console.log('clickHandle:11111', ev)
       // throw {message: 'custom test'}
+    },
+    userLogin () {
+      wx.login({
+        success (res) {
+          if (res.code) {
+            // 发起网络请求
+            wx.request({
+              url: 'https://test.com/onLogin',
+              data: {
+                code: res.code
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
     }
+
+    // createAd () {
+    //   console.log('1111')
+    //   wx.getSystemInfo({
+    //     success (res) {
+    //       console.log(res.model)
+    //       console.log(res.pixelRatio)
+    //       console.log(res.windowWidth)
+    //       console.log(res.windowHeight)
+    //       console.log(res.language)
+    //       console.log(res.version)
+    //       console.log(res.platform)
+    //     }
+    //   })
+    //   try {
+    //     const res = wx.getSystemInfoSync()
+    //     console.log(res.model)
+    //     console.log(res.pixelRatio)
+    //     console.log(res.windowWidth)
+    //     console.log(res.windowHeight)
+    //     console.log(res.language)
+    //     console.log(res.version)
+    //     console.log(res.platform)
+    //   } catch (e) {
+    //     // Do something when catch error
+    //   }
+    // }
   },
 
   created () {
+    this.userLogin()
     // let app = getApp()
   }
 }
