@@ -16,12 +16,13 @@
     </div>
     <div>
       <ul class="pro-list">
-        <li class="pro-item" v-for="(item, key) in proList" :key="id">
+        <li class="pro-item" v-for="(item, key) in proList" :key="key">
           <img src="https://android-artworks.25pp.com/fs08/2019/07/16/5/110_481c439b99996f63a2f57287c136d107_con.png" alt="">
           <p>是否订阅</p>
         </li>
       </ul>
     </div>
+
 
     <!-- <div>
       <p @click='createAd'>生成广告</p>
@@ -30,10 +31,16 @@
       <!--<img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />-->
       <!--<img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />-->
 
-      <!--<div class="userinfo-nickname">-->
-        <!--<card :text="userInfo.nickName"></card>-->
-      <!--</div>-->
-    <!--</div>-->
+    <button open-type="getUserInfo" @getuserinfo="bindgetuserinfo">用户授权</button>
+    <div class="userinfo" @click="getUserOpenInfo">
+      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
+      <img class="userinfo-avatar" src="/static/images/1.png" background-size="cover" />
+
+
+      <div class="userinfo-nickname">
+        <card :text="userInfo.nickName"></card>
+      </div>
+    </div>
 
     <!--<div class="usermotto">-->
       <!--<div class="user-motto">-->
@@ -67,7 +74,7 @@ export default {
       motto: 'Hello miniprograme',
       userInfo: {
         nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
+        avatarUrl: 'http://mpvue.com/assets/img/logo.0aaccdfd.png'
       },
       indicatorDots: true,
       autoplay: true,
@@ -97,6 +104,38 @@ export default {
       } else {
         mpvue.navigateTo({ url })
       }
+    },
+    bindgetuserinfo (e) {
+      console.log(e)
+    },
+    getUserOpenInfo (e) {
+      console.log('get user info')
+      let that = this
+      // console.log(e)
+      // 获取用户信息
+      wx.getSetting({
+        success (res) {
+          // console.log("res", res)
+          if (res.authSetting['scope.userInfo']) {
+            console.log('已授权')
+            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+            wx.getUserInfo({
+              success (res) {
+                console.log('获取用户信息成功', res)
+                // that.setData({
+                //   name: res.userInfo.nickName
+                // })
+              },
+              fail (res) {
+                console.log('获取用户信息失败', res)
+              }
+            })
+          } else {
+            console.log('未授权')
+            that.showSettingToast('请授权')
+          }
+        }
+      })
     },
     clickHandle (ev) {
       console.log('clickHandle:11111', ev)
